@@ -29,7 +29,7 @@
 		<h3>BOARD1 테이블의 게시물 상세내역</h3>
 		<hr width="50%" color="gray">
 		<table>
-			<c:set var="dto" value="${cont }"></c:set><!-- ??이거 위에있으면 뭐어..? -->
+			<c:set var="dto" value="${cont }"/><!-- ??이거 위에있으면 뭐어..? -->
 			<c:if test="${!empty dto }">
 				<tr>
 					<th>작성자</th>
@@ -51,6 +51,7 @@
 					<th>작성일</th>
 					<td>${dto.getBoard_regdate() }</td>
 				</tr>
+				
 			</c:if>
 			<c:if test="${empty dto }">
 				<tr>
@@ -59,6 +60,14 @@
 					</td>
 				</tr>
 			</c:if>
+				<tr>
+					<td colspan="2">
+						<a onclick="history.back()">[뒤로가기]</a>
+						<a href="board_check.do?no=${dto.getBoard_no() }&cn=1">[수정]</a>
+						<a href="board_check.do?no=${dto.getBoard_no() }&cn=2">[삭제]</a>
+					</td>
+				</tr>
+			
 		</table>
 	</div>	
 	

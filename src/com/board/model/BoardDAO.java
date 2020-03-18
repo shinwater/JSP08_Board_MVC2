@@ -193,4 +193,79 @@ public class BoardDAO {
 		}
 		return dto;
 	}//boardCont() 메서드 end
+	
+	public BoardDTO boardUpdate(int no) {
+		BoardDTO dto = new BoardDTO();
+		
+		try {
+			con = openConn();
+			con.setAutoCommit(false);
+			sql ="select * from board1 where board_no=?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				dto.setBoard_no(rs.getInt("board_no"));
+				dto.setBoard_writer(rs.getString("board_writer"));
+				dto.setBoard_title(rs.getString("board_title"));
+				dto.setBoard_cont(rs.getString("board_cont"));
+				dto.setBoard_pwd(rs.getString("board_pwd"));
+				dto.setBoard_hit(rs.getInt("board_hit"));
+				dto.setBoard_regdate(rs.getString("board_regdate"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			e.printStackTrace();
+		} finally {
+			try { 
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(con != null) con.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return dto;
+	}//boardUpdate() end
+	
+	public int boardCheck(int no, String pwd) {
+		int res = 0;
+		BoardDTO dto = new BoardDTO();
+		
+		
+		try {
+			con=openConn();
+			sql="select * from board1 where board_no=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				if(pwd.equals(rs.getString("board_pwd"))) {
+					res=1;
+				}
+			}
+			
+			rs.close(); pstmt.close(); con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
 }
