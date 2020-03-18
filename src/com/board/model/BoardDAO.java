@@ -12,6 +12,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.sun.org.apache.xml.internal.dtm.DTMDOMException;
+
 public class BoardDAO {
 
 	Connection con = null;
@@ -95,7 +97,7 @@ public class BoardDAO {
 		
 		try {
 			con = openConn();
-			//commit을 끝내지않고! 문제가 생기면 rollback!
+			//commit을 끝내지않고! 문제가 생기면 rollback! - 추가나 삭제시에 사용
 			con.setAutoCommit(false);
 			sql = "select max(board_no) from board1";
 			pstmt = con.prepareStatement(sql);
@@ -142,5 +144,53 @@ public class BoardDAO {
 			}
 		}
 		return result;
-	}
+	}//insertBoard() 메서드 end
+	
+	//board1 테이블의 글번호에 해당하는 글을 가져오는 메서드
+	public BoardDTO boardCont(int no) {
+		BoardDTO dto = new BoardDTO();
+		try {
+			
+			con = openConn();
+			//조회수증가
+			sql = "update board1 set board_hit = board_hit + 1 where board_no=?";
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			pstmt.executeUpdate();
+			
+			//상세내역 쿼리문 작성.
+			sql= "select * from board1 where board_no=?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				dto.setBoard_no(rs.getInt("board_no"));
+				dto.setBoard_writer(rs.getString("board_writer"));
+				dto.setBoard_title(rs.getString("board_title"));
+				dto.setBoard_cont(rs.getString("board_cont"));
+				dto.setBoard_pwd(rs.getString("board_pwd"));
+				dto.setBoard_hit(rs.getInt("board_hit"));
+				dto.setBoard_regdate(rs.getString("board_regdate"));
+				
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(con != null) con.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return dto;
+	}//boardCont() 메서드 end
 }

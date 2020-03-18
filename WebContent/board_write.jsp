@@ -5,6 +5,21 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+
+	table{
+		border: 1px solid #000;
+		border-collapse;
+		width: 350px;
+		
+	}
+	
+	th,td{
+		border: 1px solid #000;
+		border-collapse;
+		text-align: center;
+	}
+</style>
 </head>
 <body>
 	<div align="center">

@@ -39,6 +39,8 @@ public class FrontController extends HttpServlet {
 		   action = new BoardWriteAction();
 	   }else if(command.equals("board_write_ok.do")) {
 		   action = new BoardWriteOkAction();
+	   }else if(command.equals("board_cont.do")) {
+		   action = new BoardContAction();
 	   }
 	   
 	   
