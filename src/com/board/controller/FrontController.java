@@ -8,8 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.board.action.Action;
-import com.board.action.BoardListAction;
+import com.board.action.*;
 
 public class FrontController extends HttpServlet {
 
@@ -36,6 +35,10 @@ public class FrontController extends HttpServlet {
 	   Action action = null;
 	   if(command.equals("board_list.do")) {
 		   action = new BoardListAction(); //부모 뭐로....자식...객체..생성..?
+	   }else if(command.equals("board_write.do")) {
+		   action = new BoardWriteAction();
+	   }else if(command.equals("board_write_ok.do")) {
+		   action = new BoardWriteOkAction();
 	   }
 	   
 	   

@@ -36,7 +36,7 @@
 				<th>글번호</th><th>글제목</th>
 				<th>조회수</th><th>작성일</th>
 			</tr>
-			<c:set var="list" value="${List }"></c:set>
+			<c:set var="list" value="${List }"/>
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
 					<tr>
@@ -56,7 +56,11 @@
 				</tr>
 			</c:if>
 		</table>
-
+		<hr width="50%" color="blue">
+		<br/>
+		
+		<input type="button" value="글쓰기"
+			onclick="location.href='<%=request.getContextPath() %>/board_write.do'">
 	
 	
 	</div>

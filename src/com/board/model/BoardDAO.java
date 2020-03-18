@@ -88,4 +88,77 @@ public class BoardDAO {
 		return list;
 		
 	} //getBoardList() end
+	
+	//board1테이블에 게시글을 추가하는 메서드
+	public int insertBoard(BoardDTO dto) {
+		int result=0, count = 0;
+		
+		con = openConn();
+		try {
+			con = openConn();
+			//commit을 끝내지않고! 문제가 생기면 rollback!
+			con.setAutoCommit(false);
+			sql = "select max(board_no) from board1";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1)+1; //첫번째 인덱스에 있는 값을 int형으로 가져와라..
+			}else {
+				count = 1; //게시판 첫글일떈 max: null값 ->count 초기값을 1로 두고 else문 지워버려도된다ㅏㅇ..
+			}
+			
+			sql="insert into board1 values(?,?,?,?,?,default,sysdate)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, count);
+			pstmt.setString(2, dto.getBoard_writer());
+			pstmt.setString(3, dto.getBoard_title());
+			pstmt.setString(4, dto.getBoard_cont());
+			pstmt.setString(5, dto.getBoard_pwd());
+			result = pstmt.executeUpdate();
+			con.commit(); //완전히 DB에 저장하는 메서~ㅡㄷ
+			
+			//open객체 닫기
+			rs.close();pstmt.close();
+			con.close();
+			
+			
+			
+		} catch (SQLException e) {
+			//처리도중에 문제가 발생한 경우 이전상태로 되돌리는 메서드
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
 }
