@@ -93,7 +93,6 @@ public class BoardDAO {
 	public int insertBoard(BoardDTO dto) {
 		int result=0, count = 0;
 		
-		con = openConn();
 		try {
 			con = openConn();
 			//commit을 끝내지않고! 문제가 생기면 rollback!
