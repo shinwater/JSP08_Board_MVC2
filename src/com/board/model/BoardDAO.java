@@ -119,8 +119,8 @@ public class BoardDAO {
 			con.commit(); //완전히 DB에 저장하는 메서~ㅡㄷ
 			
 			//open객체 닫기
-			rs.close();pstmt.close();
-			con.close();
+			/*rs.close();pstmt.close();
+			con.close();*/
 			
 			
 			
