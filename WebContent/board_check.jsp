@@ -9,14 +9,10 @@
 </head>
 <body>
 	<div align="center">
-		<c:set var="board_no" value="${no }" />
-		<c:set var="cn" value="${cn }" />
 		<form action="board_check_ok.do">
-			<input type="hidden" name="no" value="${board_no }"> <input
-				type="hidden" name="cn" value="${cn }">
+			<input type="hidden" name="no" value="${no }"> 
+			<input type="hidden" name="cn" value="${cn }">
 			<table>
-
-
 				<tr>
 
 					<th>비밀번호 확인 :</th>

@@ -21,19 +21,20 @@ public class BoardCheckOkAction implements Action {
 		BoardDAO dao = BoardDAO.getInstance();
 		int res = dao.boardCheck(no,pwd);
 		
+		request.setAttribute("board_no", no);
 		
 		PrintWriter out = response.getWriter();
-		if(res==1) {//비밀번호 확인 성공했을경우
+		if(res>0) {//비밀번호 확인 성공했을경우
 			if(cn == 1) {
-				path="board_update.jsp";
+				path="board_update.do?no="+no;
 			}else if(cn ==2) {
-				path="board_delete.jsp";
+				path="board_delete.do?no="+no;
 			}
 		}else {//비밀번호 확인 실패했을 꼉우
 			out.println("<script>");
 			out.println("alert('비밀번호 틀림 ㅎㅎ')");
 			out.println("history.go(-1)");
-			out.println("<script>");
+			out.println("</script>");
 		}
 		
 		

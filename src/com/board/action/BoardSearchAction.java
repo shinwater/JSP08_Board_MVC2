@@ -1,6 +1,7 @@
 package com.board.action;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,22 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.board.model.BoardDAO;
 import com.board.model.BoardDTO;
 
-public class BoardUpdateAction implements Action {
+public class BoardSearchAction implements Action {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
-		int board_no = Integer.parseInt(request.getParameter("no"));
-		
-		//dto로 값ㅂ받아서 키로 보내줘야지이
+		String find_field = request.getParameter("find_field");
+		String find_name = request.getParameter("find_name");
 		
 		BoardDAO dao = BoardDAO.getInstance();
+		List<BoardDTO> list = dao.boardSearch(find_field,find_name);
 		
-		BoardDTO list =dao.boardUpdate(board_no);
 		request.setAttribute("List", list);
 		
-		return "board_update.jsp";
-		
+		return "board_search.jsp";
 	}
 
 }

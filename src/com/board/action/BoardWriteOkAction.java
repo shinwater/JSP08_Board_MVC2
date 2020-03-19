@@ -41,7 +41,7 @@ public class BoardWriteOkAction implements Action {
 			out.println("</script>");
 		}else {
 			out.println("<script>");
-			out.println("alert('게시글 추가 성공!')");
+			out.println("alert('게시글 추가 실패!')");
 			out.println("history.back()");
 			out.println("</script>");
 		}

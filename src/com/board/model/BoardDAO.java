@@ -194,6 +194,64 @@ public class BoardDAO {
 		return dto;
 	}//boardCont() 메서드 end
 	
+
+	
+	public int boardCheck(int no, String pwd) {
+		int res = 0;
+		BoardDTO dto = new BoardDTO();
+		
+		
+		try {
+			con=openConn();
+			sql="select * from board1 where board_no=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				if(pwd.equals(rs.getString("board_pwd"))) {
+					res=1;
+				}
+			}
+			
+			rs.close(); pstmt.close(); con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
+	}//boardCheck() end
+	
+	public BoardDTO getUpdateList(int no) {
+		BoardDTO dto = new BoardDTO();
+		con =openConn();
+		sql ="select * from board1 where board_no=?";
+		try {
+			con =openConn();
+			sql ="select * from board1 where board_no=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto.setBoard_no(rs.getInt("board_no"));
+				dto.setBoard_writer(rs.getString("board_writer"));
+				dto.setBoard_title(rs.getString("board_title"));
+				dto.setBoard_cont(rs.getString("board_cont"));
+				dto.setBoard_pwd(rs.getString("board_pwd"));
+				dto.setBoard_hit(rs.getInt("board_hit"));
+				dto.setBoard_regdate(rs.getString("board_regdate"));
+			}
+			
+			rs.close(); pstmt.close(); con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dto;
+	}//getUpdateList() end
+	
 	public BoardDTO boardUpdate(int no) {
 		BoardDTO dto = new BoardDTO();
 		
@@ -242,30 +300,114 @@ public class BoardDAO {
 		return dto;
 	}//boardUpdate() end
 	
-	public int boardCheck(int no, String pwd) {
+	public int boardUpdateOk(BoardDTO dto) {
 		int res = 0;
-		BoardDTO dto = new BoardDTO();
-		
 		
 		try {
-			con=openConn();
-			sql="select * from board1 where board_no=?";
+			con = openConn();
+			sql = "update board1 set board_writer=?, board_title=?,board_cont=?,board_pwd=? where board_no=?";
+			
 			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, no);
-			rs = pstmt.executeQuery();
+			pstmt.setInt(5, dto.getBoard_no());
+			pstmt.setString(1, dto.getBoard_writer());
+			pstmt.setString(2, dto.getBoard_title());
+			pstmt.setString(3, dto.getBoard_cont());
+			pstmt.setString(4, dto.getBoard_pwd());
+			res= pstmt.executeUpdate();
 			
-			if(rs.next()) {
-				if(pwd.equals(rs.getString("board_pwd"))) {
-					res=1;
-				}
-			}
-			
-			rs.close(); pstmt.close(); con.close();
+			pstmt.close(); con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return res;
-	}
+	}//boardUpdateOk() end;
+	
+	public int boardDelete(int no) {
+		int res=0;
+		
+		try {
+			con = openConn();
+			con.setAutoCommit(false);
+			sql = "delete from board1 where board_no=?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			
+			res= pstmt.executeUpdate();
+			con.commit();
+			
+		} catch (SQLException e) {
+			//처리도중에 문제가 발생한 경우 이전상태로 되돌리는 메서드
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(con != null) con.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return res;
+		
+	}//boardDelete() end
+	
+	//검색해서 나온값을 List에 저장 반환~~~
+	public List<BoardDTO> boardSearch(String ff, String fn){
+		List<BoardDTO> list = new ArrayList<BoardDTO>();
+		BoardDTO dto = new BoardDTO();
+		openConn();
+		
+		try {
+			if(ff.equals("title")) {
+				sql="select * from board1 where board_title like ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, "%"+fn+"%");
+						
+			}else if(ff.equals("content")) {
+				sql="select * from board1 where board_content like ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, "%"+fn+"%");
+			}else if(ff.equals("title_content")) {
+				sql="select * from board1 where board_title like ? or board_cont like ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, "%"+fn+"%");
+				pstmt.setString(2, "%"+fn+"%");
+			}else if(ff.equals("writer")) {
+				sql="select * from board1 where board_writer like ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, "%"+fn+"%");
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				dto.setBoard_no(rs.getInt("board_no"));
+				dto.setBoard_writer(rs.getString("board_writer"));
+				dto.setBoard_pwd(rs.getString("board_pwd"));
+				dto.setBoard_title(rs.getString("board_title"));
+				dto.setBoard_cont(rs.getString("board_cont"));
+				dto.setBoard_hit(rs.getInt("board_hit"));
+				dto.setBoard_regdate(rs.getString("board_regdate"));
+				
+				list.add(dto);
+			}
+			
+			rs.close();pstmt.close();con.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}//boardSearch() end;
 }

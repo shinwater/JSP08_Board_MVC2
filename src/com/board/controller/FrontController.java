@@ -51,6 +51,8 @@ public class FrontController extends HttpServlet {
 			action = new BoardUpdateOkAction();
 		} else if (command.equals("board_delete.do")) {
 			action = new BoardDeleteAction();
+		} else if (command.equals("board_search.do")) {
+			action = new BoardSearchAction();
 		}
 
 		String path1 = action.execute(request, response);

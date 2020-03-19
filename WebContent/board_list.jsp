@@ -62,7 +62,18 @@
 		<input type="button" value="글쓰기"
 			onclick="location.href='<%=request.getContextPath() %>/board_write.do'">
 	
-	
+		<form method="post" action="board_search.do">
+			<select name="find_field">
+				<option value="title">글제목</option>
+				<option value="content">글내용</option>
+				<option value="title_content">글제목+글내용</option>
+				<option value="writer">글쓴이</option>
+			</select>
+			<input type="text" name="find_name" size="15"/>
+			<input type="submit" value="검색">
+			
+		
+		</form>
 	</div>
 </body>
 </html>
